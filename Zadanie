@@ -1,0 +1,69 @@
+#include <iostream>
+#include <fstream>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+using namespace std;
+
+int main(int argc, char** argv)
+{
+ int liczbaRekordow=0;
+ int liczbaII,liczbaIII;
+ int rekord1,rekord2,rekord3;
+ int liczbarekordow;
+ ifstream file; //plik wejsciowy
+ ifstream file2;
+ ifstream file3;
+ ofstream fileOut; //plik wynikowy do zapisu
+ char* endptr; // to jest wskaźnik na miejsce, gdzie przy konwersji z systemu czworkowego wystąpi błąd - nieużywana zmienna
+ long liczba, max; //liczba dziesietna, minimum z pliku
+ long liczba2, max2;
+ long liczba3, max3;
+ string liczba4,liczba5,liczba6; //dwie liczby w systemie czworkowym wczytujemy jako "string" bo mogą być dłuższe od long long
+ file.open("dane_systemy2.txt"); //otworz plik liczb
+ fileOut.open("wyjscie.txt"); //otworz plik do wynikow
+ bool pierwszy = true;  //do algorytmu MINIMUM - zakładamy, że pierwsza liczba jest najmniejsza z dotychczas przeczytanych
+ 
+ if(file.good())  //sprawdzenie czy plik istnieje
+     while(!file.eof())        //petla wykonuje sie az program dojedzie do konca pliku
+     {
+               file>>liczba >> liczba2;   // wczyta dwie liczby z pliku (w wierszu) do 2 stringów
+               file2>>liczba3 >> liczba4;
+               file3>>liczba5 >> liczba6;
+               liczba =  strtol(liczba4.c_str(), &endptr, 4);
+               liczbaII =  strtol(liczba5.c_str(), &endptr, 4);
+               liczbaIII =  strtol(liczba6.c_str(), &endptr, 4);
+               //^konwersja z systemu czworkowego do dziesietnego, string (C++) trzeba zamienić na char * (C) funkcja .c_str()
+               //zmienna endptr wskazuje na znak w stringu, który nie pasuje do systemu czwórkowego - tu niesprawdzone, bo zakładamy, że dane są poprawne!
+               if(pierwszy) //jeśli to pierwsza liczba z pliku - będzie nowym MINIMUM
+               {
+                            max = liczba;
+                            max2=liczbaII;
+                            max3=liczbaIII;
+                            pierwszy = false;
+                   }
+               else{ //jeśli to kolejna liczba z pliku...
+                  bool rekord = false;
+				  if(liczba > max){
+				  max=liczba;
+				  rekord=true;} //... i jest mniejsza od dotychczasowego minimum...
+                  if(liczbaII > max2){
+                  	max2=liczbaII;
+				  rekord2=true;}
+				  }
+				  if(liczbaIII > max3){
+				  	max3=liczbaIII;
+				  rekord3=true;}
+				  }
+				  if( rekord1 || rekord2 || rekord3 ) 
+				  liczbaRekordow++;
+				 // ... to nadpisz min
+					   
+     //eof() koniec pliku
+ fileOut<< "58.1: " << liczbarekordow <<endl; //zapisanie najmniejszej liczby z pliku czworkowego do pliku wynikowego
+ file.close();
+ file2.close();
+ file3.close();
+ return 0;
+}
